@@ -1,4 +1,5 @@
-import spacy
+#import spacy
+from liwc import Liwc
 import emoji
 import nltk
 import sqlite3
@@ -7,9 +8,12 @@ import pandas as pd
 import re
 import json
 import string
-from texthero import preprocessing
-import texthero as hero
-from liwc import Liwc
+# from texthero.preprocessing import (fillna,
+#                                     lowercase,
+#                                     remove_brackets,
+#                                     remove_digits,
+#                                     remove_punctuation,
+#                                     remove_whitespace)
 
 
 # function to return key for any value
@@ -99,14 +103,14 @@ def check_subjectivity(liwc_analysis):
     return 0
 
 
-#def normalize(text):
+# def normalize(text):
     #normalizer = Normaliser()
     #text = normalizer.normalise(text)
     #text = text.replace('username', '')
     #text = text.replace('hashtag', '')
     #text = text.replace('number', '')
     #text = text.replace('url', '')
-    #return text
+    # return text
 
 
 def preprocess(df):
@@ -116,14 +120,14 @@ def preprocess(df):
     df['preprocessed_text'] = df.preprocessed_text.apply(remove_emoji)
     df['preprocessed_text'] = df.preprocessed_text.apply(remove_quotes)
 
-    custom_pipeline = [preprocessing.fillna,
-                       preprocessing.lowercase,
-                       preprocessing.remove_brackets,
-                       preprocessing.remove_digits,
-                       preprocessing.remove_punctuation,
-                       preprocessing.remove_whitespace]
-    df['preprocessed_text'] = df.preprocessed_text.pipe(
-        hero.clean, custom_pipeline)
+    # custom_pipeline = [preprocessing.fillna,
+    #                    preprocessing.lowercase,
+    #                    preprocessing.remove_brackets,
+    #                    preprocessing.remove_digits,
+    #                    preprocessing.remove_punctuation,
+    #                    preprocessing.remove_whitespace]
+    # df['preprocessed_text'] = df.preprocessed_text.pipe(
+    #     hero.clean, custom_pipeline)
     return df
 
 
@@ -139,8 +143,8 @@ def main():
 
 
 if __name__ == "__main__":
-    nlp = spacy.load("pt_core_news_sm")
-    stopwords = nltk.corpus.stopwords.words('portuguese')
-    nltk.download('punkt')
+    #nlp = spacy.load("pt_core_news_sm")
+    #stopwords = nltk.corpus.stopwords.words('portuguese')
+    #nltk.download('punkt')
     #classes = ['VERB', 'NOUN', 'ADJ']
     LIWCLocation = 'LIWC2015.dic'
