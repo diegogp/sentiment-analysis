@@ -1,4 +1,3 @@
-from leia import SentimentIntensityAnalyzer
 import tweepy
 import configparser
 import os
@@ -51,7 +50,6 @@ class MyStreamListener(tweepy.StreamListener):
         if status.retweeted or status.text.startswith('RT @'):
             return True
 
-        #print(status.text)
         # Extract attributes from each tweet
         id_str = status.id_str
         created_at = status.created_at
@@ -71,28 +69,18 @@ class MyStreamListener(tweepy.StreamListener):
         retweet_count = status.retweet_count
         favorite_count = status.favorite_count
 
-        # Compute sentiment polarities
-        s = SentimentIntensityAnalyzer()
-        polarity_scores = s.polarity_scores(status.text)
-        neg_score = polarity_scores['neg']
-        neu_score = polarity_scores['neu']
-        pos_score = polarity_scores['pos']
-        compound_score = polarity_scores['compound']
-        sentiment = classify_sentiment(compound_score)
-
-        # Save data
         try:
             with con:
                 cur = con.cursor()
                 sql = """INSERT INTO {} (id_str, created_at, text, entities,
                         user_created_at, user_location, user_description,
                         user_followers_count, longitude, latitude, retweet_count, 
-                        favorite_count, neg_score, neu_score, pos_score, compound_score, sentiment)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".format(TABLE_NAME)
+                        favorite_count)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""".format(TABLE_NAME)
 
                 val = (id_str, created_at, text, entities, user_created_at, user_location,
                        user_description, user_followers_count, longitude, latitude,
-                       retweet_count, favorite_count, neg_score, neu_score, pos_score, compound_score, sentiment)
+                       retweet_count, favorite_count)
                 cur.execute(sql, val)
                 con.commit()
                 cur.close()
@@ -109,15 +97,6 @@ class MyStreamListener(tweepy.StreamListener):
         if status_code == 420:
             # return False to disconnect the stream
             return False
-
-
-def classify_sentiment(score):
-    if score >= 0.05:
-        return 'positive'
-    elif score <= -0.05:
-        return 'negative'
-    else:
-        return 'neutral'
 
 
 def streamtweets():
