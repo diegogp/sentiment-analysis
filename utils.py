@@ -44,6 +44,8 @@ def tokenize(text):
 
 
 def remove_stopwords(text):
+    stopwords = nltk.corpus.stopwords.words('portuguese')
+    nltk.download('punkt')
     tokens = tokenize(text)
     tokens = [token for token in tokens if token not in stopwords]
     text = " ".join(tokens)
