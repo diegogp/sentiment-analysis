@@ -158,7 +158,7 @@ def truncate_ellipsis(text):
 
 
 def preprocess(df):
-    df['preprocessed_text'] = df.text.apply(remove_urls)
+    df['preprocessed_text'] = df.text.astype(str).apply(remove_urls)
     df['preprocessed_text'] = df.preprocessed_text.apply(lowercase)
     df['preprocessed_text'] = df.preprocessed_text.apply(remove_non_ascii_normalized)
     #df['preprocessed_text'] = df.preprocessed_text.apply(lambda x: x.strip())
