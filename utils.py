@@ -9,6 +9,7 @@ import re
 import json
 import string
 import unicodedata
+import ast
 # function to return key for any value
 
 
@@ -124,6 +125,17 @@ def get_liwc_analysis(text):
     tokens = tokenize(text)
     liwc_analysis = dict(liwc.parse(tokens))
     return liwc_analysis
+
+
+def create_columns_from_liwc(df):
+    classes = ['compare (Comparisons)',
+                'affect (Affect)',
+                'posemo (Positive Emotions)',
+                'negemo (Negative Emotions)']
+    df['liwc_analysis'] = df['liwc_analysis'].apply(lambda x: ast.literal_eval(x))
+    for col in classes:
+        df[col] = df.liwc_analysis.apply(lambda x: x[col] if col in x.keys() else '0')
+    return df
 
 
 def check_subjectivity(liwc_analysis):
